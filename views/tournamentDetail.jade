@@ -1,0 +1,96 @@
+extends layout
+
+block content
+  div.page-header
+    h1= title
+      div.pull-right
+        if user.isAdmin
+          if tournament.status == 'open'
+            a(href='/tournament/#{tournament._id}/close').btn Close enrollment
+          if tournament.status == 'close'
+            a(href='/tournament/#{tournament._id}/open').btn Open for enrollment
+            if tournament.startable()
+              a(href='/tournament/#{tournament._id}/start').btn.btn-primary Start tournament
+
+  ul.nav.nav-tabs
+    li.active
+      a(href="#default",data-toggle="tab") Default
+    if tournament.status == 'run'
+      li
+        a(href="#visual",data-toggle="tab") Visual bracket
+
+  div.tab-content
+    div(id="default").tab-pane.active
+      div.well
+        table.table
+          thead
+            tr
+              th #
+              th Username
+              th E-Mail
+          tbody
+            for entry, number in tournament.users
+              tr
+                td= number+1
+                td= entry.username
+                td= entry.email
+      if tournament.status == 'open'
+        if userInTournament
+          form(action='/tournament/#{tournament._id}/leave', method='post')
+            input(type='submit', value='Leave Tournament').btn
+        else
+          form(action='/tournament/#{tournament._id}/enter', method='post')
+            input(type='submit', value='Enter Tournament').btn
+    if tournament.status == 'run'
+      div(id="visual").tab-pane
+        div.row
+          div.span4
+            for entry in playerList
+              h4 #{entry.group}
+              table.table
+                for player in entry.players
+                  tr(data-player="#{player.id}")
+                    td(style="width: 80%") #{player.user.username}
+                    td
+                      input(type="button",value="-").btn.btn-mini.btn-score
+                    td.score #{player.score}
+                    td
+                      input(type="button",value="+").btn.btn-mini.btn-score
+          div.span4
+            h4 Match 1
+            table.table
+              tr
+                td TBA
+                td 0
+              tr
+                td TBA
+                td 0
+            h4 Match 2
+            table.table
+              tr
+                td TBA
+                td 0
+              tr
+                td TBA
+                td 0
+          div.span4
+            h4 Finals
+            table.table
+              tr
+                td TBA
+                td 0
+              tr
+                td TBA
+                td 0
+            h4 3rd Place
+            table.table
+              tr
+                td TBA
+                td 0
+              tr
+                td TBA
+                td 0
+  br
+  a(href='/tournament/list').btn Back
+
+  script(src='/js/tournament.js')

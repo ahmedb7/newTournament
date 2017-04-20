@@ -1,0 +1,43 @@
+doctype 5
+html
+  head
+    title=title
+    script(src='/js/jquery-1.10.0.min.js')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/css/style.css')
+  body
+    div.navbar.navbar-fixed-top
+      div.navbar-inner
+        div.container
+          button(type='button')(data-toggle='collapse')(data-target='.nav-collapse').btn.btn-navbar
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a(href='/').brand Match-System
+          div.nav-collapse.collapse
+            ul.nav
+              if currentUser.username
+                li
+                  a(href='/tournament/list') Tournaments
+                if currentUser.isAdmin
+                  li
+                    a(href='/users') Userlist
+            ul.nav.pull-right
+              if currentUser.username
+                li.dropdown
+                  a(href="#", data-toggle="dropdown").dropdown-toggle #{currentUser.username}
+                    b.caret
+                  ul.dropdown-menu
+                    li
+                      a(href='/user/logout') Logout
+              else
+                li
+                  a(href='/user/signup') Sign up
+                li
+                  a(href='/user/signin') Sign in
+    div.container
+      div.content
+        block content
+        script(src='/js/bootstrap.min.js')
